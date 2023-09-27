@@ -1,0 +1,157 @@
+[gd_scene load_steps=14 format=3 uid="uid://cf4upd0xdrxmy"]
+
+[ext_resource type="Script" path="res://generation.gd" id="1_6jecg"]
+[ext_resource type="Texture2D" uid="uid://k4xfxej2qnb8" path="res://ground/grass.png" id="2_iuewu"]
+[ext_resource type="Script" path="res://player/player.gd" id="3_hwv4x"]
+[ext_resource type="Texture2D" uid="uid://lvnqdhyhv2vi" path="res://player/player.png" id="4_vrih6"]
+[ext_resource type="Script" path="res://player/chunk_loading.gd" id="5_lbiql"]
+[ext_resource type="Texture2D" uid="uid://bm0mxhib3x8nn" path="res://gui/hotbar.png" id="6_wab48"]
+[ext_resource type="PackedScene" uid="uid://bh0tlwurouhfa" path="res://scenes/item.tscn" id="7_1urob"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lk2o3"]
+size = Vector2(60, 60)
+
+[sub_resource type="Animation" id="Animation_mqq0o"]
+resource_name = "walk_down"
+length = 0.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [10, 11, 12, 11, 10, 13, 14, 13]
+}
+
+[sub_resource type="Animation" id="Animation_ig7ep"]
+resource_name = "walk_left"
+length = 0.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [15, 16, 17, 16, 15, 18, 19, 18]
+}
+
+[sub_resource type="Animation" id="Animation_jhmm5"]
+resource_name = "walk_right"
+length = 0.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [5, 6, 7, 6, 5, 8, 9, 8]
+}
+
+[sub_resource type="Animation" id="Animation_8q224"]
+resource_name = "walk_up"
+length = 0.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 1, 0, 3, 4, 3]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_htrj4"]
+_data = {
+"walk_down": SubResource("Animation_mqq0o"),
+"walk_left": SubResource("Animation_ig7ep"),
+"walk_right": SubResource("Animation_jhmm5"),
+"walk_up": SubResource("Animation_8q224")
+}
+
+[node name="Node2D" type="Node2D"]
+y_sort_enabled = true
+texture_filter = 1
+texture_repeat = 1
+script = ExtResource("1_6jecg")
+
+[node name="Grass" type="Sprite2D" parent="."]
+texture_filter = 1
+texture_repeat = 1
+scale = Vector2(10, 10)
+texture = ExtResource("2_iuewu")
+
+[node name="player" type="CharacterBody2D" parent="."]
+z_index = 5
+y_sort_enabled = true
+script = ExtResource("3_hwv4x")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="player"]
+position = Vector2(-1, -30)
+shape = SubResource("RectangleShape2D_lk2o3")
+
+[node name="Sprite" type="Sprite2D" parent="player"]
+texture_filter = 1
+texture_repeat = 1
+position = Vector2(-1, -44)
+scale = Vector2(10, 10)
+texture = ExtResource("4_vrih6")
+hframes = 5
+vframes = 5
+frame = 18
+
+[node name="Camera2D" type="Camera2D" parent="player"]
+texture_filter = 1
+texture_repeat = 1
+position = Vector2(-1, 4.76837e-07)
+scale = Vector2(10, 10)
+zoom = Vector2(0.5, 0.5)
+script = ExtResource("5_lbiql")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="player"]
+libraries = {
+"": SubResource("AnimationLibrary_htrj4")
+}
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="IngameUI" type="ReferenceRect" parent="CanvasLayer"]
+texture_filter = 1
+texture_repeat = 1
+offset_left = -1149.0
+offset_top = -644.0
+offset_right = 1152.0
+offset_bottom = 650.0
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/IngameUI"]
+layout_mode = 0
+offset_left = 1148.0
+offset_top = 641.0
+offset_right = 1249.0
+offset_bottom = 1151.0
+texture = ExtResource("6_wab48")
+
+[node name="Items" type="Marker2D" parent="."]
+
+[node name="Item" parent="." instance=ExtResource("7_1urob")]
+position = Vector2(-228, -101)
+
+[connection signal="generate" from="player/Camera2D" to="." method="chunk_generate"]
