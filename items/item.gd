@@ -1,10 +1,10 @@
 extends StaticBody2D
 
 func _ready():
-	$Area2D.area_entered.connect(col.bind($"/root/Node2D/player"))
+	$Area2D.body_entered.connect(col.bind($"/root/Node2D/player"))
 
-func col(area):
-	print(area.name)
-	if area.is_in_group("items"):
-		print("yo mam")
+func col(area, body):
+	if body.can_add_item(self.get_meta("item_type"), 1):
+		body.add_item(self.get_meta("item_type"), 1)
+		self.queue_free()
 		
