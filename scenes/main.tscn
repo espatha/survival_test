@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://cf4upd0xdrxmy"]
+[gd_scene load_steps=26 format=3 uid="uid://cf4upd0xdrxmy"]
 
 [ext_resource type="Script" path="res://generation.gd" id="1_6jecg"]
 [ext_resource type="Texture2D" uid="uid://k4xfxej2qnb8" path="res://ground/grass.png" id="2_iuewu"]
@@ -7,10 +7,16 @@
 [ext_resource type="Script" path="res://player/chunk_loading.gd" id="5_lbiql"]
 [ext_resource type="Texture2D" uid="uid://bm0mxhib3x8nn" path="res://gui/hotbar.png" id="6_wab48"]
 [ext_resource type="Texture2D" uid="uid://ckuwbvoqdlls5" path="res://gui/hb_select.png" id="7_0mva6"]
-[ext_resource type="Texture2D" uid="uid://rfa40ccgeydk" path="res://items/iron_axe.png" id="7_0yitd"]
 [ext_resource type="PackedScene" uid="uid://bh0tlwurouhfa" path="res://scenes/item.tscn" id="7_1urob"]
 [ext_resource type="Texture2D" uid="uid://cmcup06o3l3x7" path="res://gui/inv.png" id="7_n4rsq"]
+[ext_resource type="Texture2D" uid="uid://dygr16dt35jfg" path="res://items/wood.png" id="10_hm1yb"]
 [ext_resource type="Texture2D" uid="uid://cgmhuqw08l4gw" path="res://player/attack.png" id="11_x5hvy"]
+[ext_resource type="Texture2D" uid="uid://bq4bhido07tb8" path="res://gui/bar_bottom.png" id="11_yve8n"]
+[ext_resource type="Texture2D" uid="uid://bnpsgkqrm5r6s" path="res://gui/bar_over.png" id="12_ugu7j"]
+[ext_resource type="Texture2D" uid="uid://bvpr6k5xe01tw" path="res://gui/bar_progress.png" id="13_oum0w"]
+[ext_resource type="Texture2D" uid="uid://cktcyo6flgtii" path="res://gui/sat_bar_bottom.png" id="14_uly5n"]
+[ext_resource type="Texture2D" uid="uid://bv5u355615874" path="res://gui/sat_bar_over.png" id="15_nokqy"]
+[ext_resource type="Texture2D" uid="uid://bm6rhgbkuiyh2" path="res://gui/sat_bar_progress.png" id="16_5kut5"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lk2o3"]
 size = Vector2(50, 48)
@@ -124,9 +130,10 @@ shape = SubResource("RectangleShape2D_lk2o3")
 [node name="Sprite" type="Sprite2D" parent="player"]
 texture_filter = 1
 texture_repeat = 1
-position = Vector2(-1, -44)
+position = Vector2(0.999999, -3.8147e-06)
 scale = Vector2(10, 10)
 texture = ExtResource("4_vrih6")
+offset = Vector2(0.9, -4.15)
 hframes = 5
 vframes = 8
 frame = 10
@@ -181,240 +188,240 @@ shape = SubResource("RectangleShape2D_v330y")
 wait_time = 0.1
 one_shot = true
 
+[node name="load_timer" type="Timer" parent="player"]
+wait_time = 0.005
+autostart = true
+
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="IngameUI" type="ReferenceRect" parent="CanvasLayer"]
 texture_filter = 1
 texture_repeat = 1
-offset_left = -1149.0
-offset_top = -644.0
-offset_right = 1152.0
-offset_bottom = 650.0
+offset_top = -2.0
+offset_right = 661.0
+offset_bottom = 430.0
 mouse_filter = 2
-
-[node name="inv2" type="TextureRect" parent="CanvasLayer/IngameUI"]
-layout_mode = 0
-offset_left = 1255.0
-offset_top = 646.0
-offset_right = 1483.0
-offset_bottom = 1145.0
-texture = ExtResource("7_n4rsq")
-stretch_mode = 4
 
 [node name="hotbar2" type="GridContainer" parent="CanvasLayer/IngameUI"]
 layout_mode = 0
-offset_left = 1158.0
-offset_top = 651.0
-offset_right = 1177.0
-offset_bottom = 723.0
-scale = Vector2(5, 5)
+offset_left = 31.0
+offset_top = 20.0
+offset_right = 141.0
+offset_bottom = 410.0
+mouse_filter = 2
 theme_override_constants/v_separation = 0
 
 [node name="slot1" type="TextureRect" parent="CanvasLayer/IngameUI/hotbar2"]
+custom_minimum_size = Vector2(90, 90)
 layout_mode = 2
+mouse_filter = 0
 texture = ExtResource("7_0mva6")
-stretch_mode = 1
+expand_mode = 2
 
 [node name="slot2" type="TextureRect" parent="CanvasLayer/IngameUI/hotbar2"]
+custom_minimum_size = Vector2(90, 90)
 layout_mode = 2
+mouse_filter = 0
 texture = ExtResource("6_wab48")
-stretch_mode = 1
+expand_mode = 2
 
 [node name="slot3" type="TextureRect" parent="CanvasLayer/IngameUI/hotbar2"]
+custom_minimum_size = Vector2(90, 90)
 layout_mode = 2
+mouse_filter = 0
 texture = ExtResource("6_wab48")
-stretch_mode = 1
+expand_mode = 2
 
 [node name="slot4" type="TextureRect" parent="CanvasLayer/IngameUI/hotbar2"]
+custom_minimum_size = Vector2(90, 90)
 layout_mode = 2
+mouse_filter = 0
 texture = ExtResource("6_wab48")
-stretch_mode = 1
-
-[node name="hotbar" type="GridContainer" parent="CanvasLayer/IngameUI"]
-layout_mode = 0
-offset_left = 1173.0
-offset_top = 661.0
-offset_right = 1237.0
-offset_bottom = 997.0
-theme_override_constants/v_separation = 30
-
-[node name="slot1" type="TextureRect" parent="CanvasLayer/IngameUI/hotbar"]
-custom_minimum_size = Vector2(60, 60)
-layout_mode = 2
-texture = ExtResource("7_0yitd")
-
-[node name="Label" type="Label" parent="CanvasLayer/IngameUI/hotbar/slot1"]
-layout_mode = 0
-offset_left = 41.0
-offset_top = 44.0
-offset_right = 62.0
-offset_bottom = 73.0
-theme_override_font_sizes/font_size = 18
-text = "64"
-
-[node name="slot2" type="TextureRect" parent="CanvasLayer/IngameUI/hotbar"]
-custom_minimum_size = Vector2(60, 60)
-layout_mode = 2
-texture = ExtResource("7_0yitd")
-
-[node name="Label" type="Label" parent="CanvasLayer/IngameUI/hotbar/slot2"]
-layout_mode = 0
-offset_left = 41.0
-offset_top = 44.0
-offset_right = 62.0
-offset_bottom = 73.0
-theme_override_font_sizes/font_size = 18
-text = "64"
-
-[node name="slot3" type="TextureRect" parent="CanvasLayer/IngameUI/hotbar"]
-custom_minimum_size = Vector2(60, 60)
-layout_mode = 2
-texture = ExtResource("7_0yitd")
-
-[node name="Label" type="Label" parent="CanvasLayer/IngameUI/hotbar/slot3"]
-layout_mode = 0
-offset_left = 41.0
-offset_top = 44.0
-offset_right = 62.0
-offset_bottom = 73.0
-theme_override_font_sizes/font_size = 18
-text = "64"
-
-[node name="slot4" type="TextureRect" parent="CanvasLayer/IngameUI/hotbar"]
-custom_minimum_size = Vector2(60, 60)
-layout_mode = 2
-texture = ExtResource("7_0yitd")
-
-[node name="Label" type="Label" parent="CanvasLayer/IngameUI/hotbar/slot4"]
-layout_mode = 0
-offset_left = 41.0
-offset_top = 44.0
-offset_right = 62.0
-offset_bottom = 73.0
-theme_override_font_sizes/font_size = 18
-text = "64"
+expand_mode = 2
 
 [node name="inv" type="GridContainer" parent="CanvasLayer/IngameUI"]
 layout_mode = 0
-offset_left = 1275.0
-offset_top = 661.0
-offset_right = 1303.0
-offset_bottom = 728.0
-theme_override_constants/h_separation = 30
-theme_override_constants/v_separation = 30
+offset_left = 135.0
+offset_top = 20.0
+offset_right = 315.0
+offset_bottom = 386.0
+mouse_filter = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
 columns = 2
 
-[node name="slot5" type="TextureRect" parent="CanvasLayer/IngameUI/inv"]
-custom_minimum_size = Vector2(60, 60)
+[node name="slot1" type="TextureRect" parent="CanvasLayer/IngameUI/inv"]
+custom_minimum_size = Vector2(90, 90)
 layout_mode = 2
-texture = ExtResource("7_0yitd")
+mouse_filter = 0
+texture = ExtResource("7_n4rsq")
 
-[node name="Label" type="Label" parent="CanvasLayer/IngameUI/inv/slot5"]
-layout_mode = 0
-offset_left = 41.0
-offset_top = 44.0
-offset_right = 62.0
-offset_bottom = 73.0
-theme_override_font_sizes/font_size = 18
-text = "64"
+[node name="slot2" type="TextureRect" parent="CanvasLayer/IngameUI/inv"]
+custom_minimum_size = Vector2(90, 90)
+layout_mode = 2
+mouse_filter = 0
+texture = ExtResource("7_n4rsq")
+
+[node name="slot3" type="TextureRect" parent="CanvasLayer/IngameUI/inv"]
+custom_minimum_size = Vector2(90, 90)
+layout_mode = 2
+mouse_filter = 0
+texture = ExtResource("7_n4rsq")
+
+[node name="slot4" type="TextureRect" parent="CanvasLayer/IngameUI/inv"]
+custom_minimum_size = Vector2(90, 90)
+layout_mode = 2
+mouse_filter = 0
+texture = ExtResource("7_n4rsq")
+
+[node name="slot5" type="TextureRect" parent="CanvasLayer/IngameUI/inv"]
+custom_minimum_size = Vector2(90, 90)
+layout_mode = 2
+mouse_filter = 0
+texture = ExtResource("7_n4rsq")
 
 [node name="slot6" type="TextureRect" parent="CanvasLayer/IngameUI/inv"]
-custom_minimum_size = Vector2(60, 60)
+custom_minimum_size = Vector2(90, 90)
 layout_mode = 2
-texture = ExtResource("7_0yitd")
-
-[node name="Label" type="Label" parent="CanvasLayer/IngameUI/inv/slot6"]
-layout_mode = 0
-offset_left = 41.0
-offset_top = 44.0
-offset_right = 62.0
-offset_bottom = 73.0
-theme_override_font_sizes/font_size = 18
-text = "64"
+mouse_filter = 0
+texture = ExtResource("7_n4rsq")
 
 [node name="slot7" type="TextureRect" parent="CanvasLayer/IngameUI/inv"]
-custom_minimum_size = Vector2(60, 60)
+custom_minimum_size = Vector2(90, 90)
 layout_mode = 2
-texture = ExtResource("7_0yitd")
-
-[node name="Label" type="Label" parent="CanvasLayer/IngameUI/inv/slot7"]
-layout_mode = 0
-offset_left = 41.0
-offset_top = 44.0
-offset_right = 62.0
-offset_bottom = 73.0
-theme_override_font_sizes/font_size = 18
-text = "64"
+mouse_filter = 0
+texture = ExtResource("7_n4rsq")
 
 [node name="slot8" type="TextureRect" parent="CanvasLayer/IngameUI/inv"]
-custom_minimum_size = Vector2(60, 60)
+custom_minimum_size = Vector2(90, 90)
 layout_mode = 2
-texture = ExtResource("7_0yitd")
+mouse_filter = 0
+texture = ExtResource("7_n4rsq")
 
-[node name="Label" type="Label" parent="CanvasLayer/IngameUI/inv/slot8"]
+[node name="tools" type="GridContainer" parent="CanvasLayer/IngameUI"]
 layout_mode = 0
-offset_left = 41.0
-offset_top = 44.0
-offset_right = 62.0
-offset_bottom = 73.0
-theme_override_font_sizes/font_size = 18
+offset_left = 342.0
+offset_top = 20.0
+offset_right = 618.0
+offset_bottom = 110.0
+mouse_filter = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 3
+
+[node name="slot1" type="TextureRect" parent="CanvasLayer/IngameUI/tools"]
+custom_minimum_size = Vector2(90, 90)
+layout_mode = 2
+mouse_filter = 0
+texture = ExtResource("7_n4rsq")
+
+[node name="slot2" type="TextureRect" parent="CanvasLayer/IngameUI/tools"]
+custom_minimum_size = Vector2(90, 90)
+layout_mode = 2
+mouse_filter = 0
+texture = ExtResource("7_n4rsq")
+
+[node name="slot3" type="TextureRect" parent="CanvasLayer/IngameUI/tools"]
+custom_minimum_size = Vector2(90, 90)
+layout_mode = 2
+mouse_filter = 0
+texture = ExtResource("7_n4rsq")
+
+[node name="craft" type="GridContainer" parent="CanvasLayer/IngameUI"]
+layout_mode = 0
+offset_left = 343.0
+offset_top = 111.0
+offset_right = 616.0
+offset_bottom = 223.0
+mouse_filter = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 3
+
+[node name="slot1" type="TextureRect" parent="CanvasLayer/IngameUI/craft"]
+custom_minimum_size = Vector2(90, 90)
+layout_mode = 2
+mouse_filter = 0
+texture = ExtResource("7_n4rsq")
+
+[node name="slot2" type="TextureRect" parent="CanvasLayer/IngameUI/craft"]
+custom_minimum_size = Vector2(90, 90)
+layout_mode = 2
+mouse_filter = 0
+texture = ExtResource("7_n4rsq")
+
+[node name="slot3" type="TextureRect" parent="CanvasLayer/IngameUI/craft"]
+custom_minimum_size = Vector2(90, 90)
+layout_mode = 2
+mouse_filter = 0
+texture = ExtResource("7_n4rsq")
+
+[node name="result" type="GridContainer" parent="CanvasLayer/IngameUI"]
+layout_mode = 0
+offset_left = 344.0
+offset_top = 200.0
+offset_right = 437.0
+offset_bottom = 292.0
+mouse_filter = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 3
+
+[node name="slot1" type="TextureRect" parent="CanvasLayer/IngameUI/result"]
+custom_minimum_size = Vector2(90, 90)
+layout_mode = 2
+mouse_filter = 0
+texture = ExtResource("7_n4rsq")
+
+[node name="held_item" type="TextureRect" parent="CanvasLayer/IngameUI"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+offset_left = 5.0
+offset_top = 2.0
+offset_right = 65.0
+offset_bottom = 62.0
+mouse_filter = 2
+texture = ExtResource("10_hm1yb")
+
+[node name="Label" type="Label" parent="CanvasLayer/IngameUI/held_item"]
+layout_mode = 0
+offset_left = 42.0
+offset_top = 42.0
+offset_right = 71.0
+offset_bottom = 68.0
 text = "64"
 
-[node name="slot9" type="TextureRect" parent="CanvasLayer/IngameUI/inv"]
-custom_minimum_size = Vector2(60, 60)
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer"]
+texture_filter = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -272.0
+offset_top = 23.0
+offset_right = -222.0
+offset_bottom = 39.0
+grow_horizontal = 0
+scale = Vector2(5, 5)
+theme_override_constants/separation = 2
+
+[node name="hp" type="TextureProgressBar" parent="CanvasLayer/VBoxContainer"]
 layout_mode = 2
-texture = ExtResource("7_0yitd")
+max_value = 20.0
+step = 0.001
+value = 20.0
+texture_under = ExtResource("11_yve8n")
+texture_over = ExtResource("12_ugu7j")
+texture_progress = ExtResource("13_oum0w")
 
-[node name="Label" type="Label" parent="CanvasLayer/IngameUI/inv/slot9"]
-layout_mode = 0
-offset_left = 41.0
-offset_top = 44.0
-offset_right = 62.0
-offset_bottom = 73.0
-theme_override_font_sizes/font_size = 18
-text = "64"
-
-[node name="slot10" type="TextureRect" parent="CanvasLayer/IngameUI/inv"]
-custom_minimum_size = Vector2(60, 60)
+[node name="hp2" type="TextureProgressBar" parent="CanvasLayer/VBoxContainer"]
 layout_mode = 2
-texture = ExtResource("7_0yitd")
-
-[node name="Label" type="Label" parent="CanvasLayer/IngameUI/inv/slot10"]
-layout_mode = 0
-offset_left = 41.0
-offset_top = 44.0
-offset_right = 62.0
-offset_bottom = 73.0
-theme_override_font_sizes/font_size = 18
-text = "64"
-
-[node name="slot11" type="TextureRect" parent="CanvasLayer/IngameUI/inv"]
-custom_minimum_size = Vector2(60, 60)
-layout_mode = 2
-texture = ExtResource("7_0yitd")
-
-[node name="Label" type="Label" parent="CanvasLayer/IngameUI/inv/slot11"]
-layout_mode = 0
-offset_left = 41.0
-offset_top = 44.0
-offset_right = 62.0
-offset_bottom = 73.0
-theme_override_font_sizes/font_size = 18
-text = "64"
-
-[node name="slot12" type="TextureRect" parent="CanvasLayer/IngameUI/inv"]
-custom_minimum_size = Vector2(60, 60)
-layout_mode = 2
-texture = ExtResource("7_0yitd")
-
-[node name="Label" type="Label" parent="CanvasLayer/IngameUI/inv/slot12"]
-layout_mode = 0
-offset_left = 41.0
-offset_top = 44.0
-offset_right = 62.0
-offset_bottom = 73.0
-theme_override_font_sizes/font_size = 18
-text = "64"
+max_value = 40.0
+step = 0.001
+value = 40.0
+texture_under = ExtResource("14_uly5n")
+texture_over = ExtResource("15_nokqy")
+texture_progress = ExtResource("16_5kut5")
 
 [node name="Items" type="Marker2D" parent="."]
 y_sort_enabled = true
@@ -423,6 +430,43 @@ position = Vector2(0, -29)
 [node name="Item" parent="Items" instance=ExtResource("7_1urob")]
 position = Vector2(-228, -72)
 
+[node name="Item3" parent="Items" instance=ExtResource("7_1urob")]
+position = Vector2(-311, -12)
+
+[node name="Item4" parent="Items" instance=ExtResource("7_1urob")]
+position = Vector2(-91, -155)
+
+[node name="Item5" parent="Items" instance=ExtResource("7_1urob")]
+position = Vector2(-112, -55)
+
+[node name="Item6" parent="Items" instance=ExtResource("7_1urob")]
+position = Vector2(-2, -238)
+
+[node name="Item7" parent="Items" instance=ExtResource("7_1urob")]
+position = Vector2(12, -141)
+
+[node name="Item8" parent="Items" instance=ExtResource("7_1urob")]
+position = Vector2(-191, 43)
+
+[node name="Item9" parent="Items" instance=ExtResource("7_1urob")]
+position = Vector2(-325, 76)
+
+[node name="Item10" parent="Items" instance=ExtResource("7_1urob")]
+position = Vector2(-164, -177)
+
+[node name="Item13" parent="Items" instance=ExtResource("7_1urob")]
+position = Vector2(-410, -4)
+metadata/item_type = "wood"
+
+[node name="Item16" parent="Items" instance=ExtResource("7_1urob")]
+position = Vector2(-101, -275)
+metadata/item_type = "wood"
+
+[node name="Item17" parent="Items" instance=ExtResource("7_1urob")]
+position = Vector2(-302, 149)
+metadata/item_type = "stick"
+
 [connection signal="generate" from="player/Camera2D" to="." method="chunk_generate"]
 [connection signal="input_event" from="player/nothin" to="player" method="_on_nothin_input_event"]
 [connection signal="timeout" from="player/attack_timer" to="player" method="_on_attack_timer_timeout"]
+[connection signal="timeout" from="player/load_timer" to="player/Camera2D" method="_on_load_timer_timeout"]
