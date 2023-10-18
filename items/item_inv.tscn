@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=3 uid="uid://cjrbsxd6stuqj"]
+
+[ext_resource type="Texture2D" uid="uid://rfa40ccgeydk" path="res://items/iron_axe.png" id="1_yal07"]
+
+[node name="slot1" type="TextureRect"]
+texture_filter = 1
+custom_minimum_size = Vector2(1, 1)
+offset_left = 15.0
+offset_top = 15.0
+offset_right = 75.0
+offset_bottom = 75.0
+mouse_filter = 2
+texture = ExtResource("1_yal07")
+metadata/nbt = {}
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 42.0
+offset_top = 42.0
+offset_right = 63.0
+offset_bottom = 71.0
+theme_override_font_sizes/font_size = 18
+text = "64"

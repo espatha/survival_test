@@ -1,0 +1,39 @@
+[gd_scene load_steps=4 format=3 uid="uid://cm0tr0rvj0o0q"]
+
+[ext_resource type="Script" path="res://mob/zombu/zombu.gd" id="1_rov32"]
+[ext_resource type="Texture2D" uid="uid://cmtrd341dlmob" path="res://mob/zombu/zombu.png" id="2_45g2c"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_65r3t"]
+radius = 2.44518
+
+[node name="zombu" type="CharacterBody2D"]
+z_index = 5
+y_sort_enabled = true
+collision_layer = 2
+collision_mask = 3
+motion_mode = 1
+wall_min_slide_angle = 0.0
+script = ExtResource("1_rov32")
+
+[node name="Zombu" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(-0.3, -24.6)
+scale = Vector2(10, 10)
+texture = ExtResource("2_45g2c")
+hframes = 5
+vframes = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-0.3, 0.999996)
+scale = Vector2(10, 10)
+shape = SubResource("CircleShape2D_65r3t")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+path_desired_distance = 20.1
+target_desired_distance = 30.2
+debug_enabled = true
+
+[node name="Timer" type="Timer" parent="."]
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

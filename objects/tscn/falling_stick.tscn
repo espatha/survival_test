@@ -1,0 +1,108 @@
+[gd_scene load_steps=8 format=3 uid="uid://bhoyp418bf62n"]
+
+[ext_resource type="Script" path="res://objects/falling_stick.gd" id="1_qlbjx"]
+[ext_resource type="Texture2D" uid="uid://dwwbic51ayoop" path="res://items/stick.png" id="2_a737b"]
+
+[sub_resource type="Animation" id="Animation_h6d8n"]
+resource_name = "-death"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(),
+"transitions": PackedFloat32Array(),
+"update": 0,
+"values": []
+}
+
+[sub_resource type="Animation" id="Animation_rs10t"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.55509]
+}
+
+[sub_resource type="Animation" id="Animation_583rm"]
+resource_name = "damage"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.0001, 0.1, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 0.0523599, -0.0523599, 0.0]
+}
+
+[sub_resource type="Animation" id="Animation_yxa0k"]
+resource_name = "death"
+length = 1.3825
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Stick:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.7, 1, 1.3),
+"transitions": PackedFloat32Array(2, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, -40), Vector2(0, 0), Vector2(0, -3), Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Stick:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.7, 1.1, 1.3),
+"transitions": PackedFloat32Array(2.54912, 1, 1, 1),
+"update": 0,
+"values": [-2.57436, 0.542797, 0.923279, 0.542797]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_hngnn"]
+_data = {
+"-death": SubResource("Animation_h6d8n"),
+"RESET": SubResource("Animation_rs10t"),
+"damage": SubResource("Animation_583rm"),
+"death": SubResource("Animation_yxa0k")
+}
+
+[node name="Stick" type="StaticBody2D"]
+rotation = 1.55509
+scale = Vector2(5, 5)
+script = ExtResource("1_qlbjx")
+metadata/health = 100
+metadata/type = "rock"
+
+[node name="Stick" type="Sprite2D" parent="."]
+z_index = 5
+position = Vector2(0, -40)
+rotation = -2.57436
+texture = ExtResource("2_a737b")
+offset = Vector2(0, -0.285)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_hngnn")
+}
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

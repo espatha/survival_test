@@ -1,0 +1,368 @@
+[gd_scene load_steps=20 format=3 uid="uid://cf4upd0xdrxmy"]
+
+[ext_resource type="Script" path="res://generation.gd" id="1_6jecg"]
+[ext_resource type="Texture2D" uid="uid://k4xfxej2qnb8" path="res://ground/grass.png" id="2_iuewu"]
+[ext_resource type="Script" path="res://player/player.gd" id="3_hwv4x"]
+[ext_resource type="Texture2D" uid="uid://lvnqdhyhv2vi" path="res://player/player.png" id="4_vrih6"]
+[ext_resource type="Script" path="res://player/chunk_loading.gd" id="5_lbiql"]
+[ext_resource type="Texture2D" uid="uid://bm0mxhib3x8nn" path="res://gui/hotbar.png" id="6_wab48"]
+[ext_resource type="Texture2D" uid="uid://ckuwbvoqdlls5" path="res://gui/hb_select.png" id="7_0mva6"]
+[ext_resource type="PackedScene" uid="uid://bh0tlwurouhfa" path="res://scenes/item.tscn" id="7_1urob"]
+[ext_resource type="Texture2D" uid="uid://cmcup06o3l3x7" path="res://gui/inv.png" id="7_n4rsq"]
+[ext_resource type="Texture2D" uid="uid://dygr16dt35jfg" path="res://items/wood.png" id="10_hm1yb"]
+[ext_resource type="Texture2D" uid="uid://cgmhuqw08l4gw" path="res://player/attack.png" id="11_x5hvy"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lk2o3"]
+size = Vector2(50, 48)
+
+[sub_resource type="Animation" id="Animation_mqq0o"]
+resource_name = "walk_down"
+length = 0.8
+loop_mode = 1
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [10, 11, 12, 11, 10, 13, 14, 13]
+}
+
+[sub_resource type="Animation" id="Animation_ig7ep"]
+resource_name = "walk_left"
+length = 0.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [15, 16, 17, 16, 15, 18, 19, 18]
+}
+
+[sub_resource type="Animation" id="Animation_jhmm5"]
+resource_name = "walk_right"
+length = 0.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [5, 6, 7, 6, 5, 8, 9, 8]
+}
+
+[sub_resource type="Animation" id="Animation_8q224"]
+resource_name = "walk_up"
+length = 0.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 1, 0, 3, 4, 3]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_htrj4"]
+_data = {
+"walk_down": SubResource("Animation_mqq0o"),
+"walk_left": SubResource("Animation_ig7ep"),
+"walk_right": SubResource("Animation_jhmm5"),
+"walk_up": SubResource("Animation_8q224")
+}
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dvld6"]
+radius = 63.0
+height = 158.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_v330y"]
+size = Vector2(2388, 1346)
+
+[node name="Node2D" type="Node2D"]
+y_sort_enabled = true
+texture_filter = 1
+texture_repeat = 1
+script = ExtResource("1_6jecg")
+
+[node name="Grass" type="Sprite2D" parent="."]
+y_sort_enabled = true
+texture_filter = 1
+texture_repeat = 1
+scale = Vector2(10, 10)
+texture = ExtResource("2_iuewu")
+
+[node name="player" type="CharacterBody2D" parent="."]
+z_index = 5
+y_sort_enabled = true
+script = ExtResource("3_hwv4x")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="player"]
+position = Vector2(0, -18)
+shape = SubResource("RectangleShape2D_lk2o3")
+
+[node name="Sprite" type="Sprite2D" parent="player"]
+texture_filter = 1
+texture_repeat = 1
+position = Vector2(-1, -44)
+scale = Vector2(10, 10)
+texture = ExtResource("4_vrih6")
+hframes = 5
+vframes = 8
+frame = 10
+
+[node name="Item" type="Sprite2D" parent="player"]
+texture_filter = 1
+texture_repeat = 1
+position = Vector2(-1, -44)
+scale = Vector2(10, 10)
+hframes = 5
+vframes = 8
+frame = 10
+
+[node name="Camera2D" type="Camera2D" parent="player"]
+texture_filter = 1
+texture_repeat = 1
+position = Vector2(-1, 4.76837e-07)
+scale = Vector2(10, 10)
+zoom = Vector2(0.5, 0.5)
+script = ExtResource("5_lbiql")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="player"]
+libraries = {
+"": SubResource("AnimationLibrary_htrj4")
+}
+
+[node name="attack" type="Area2D" parent="player"]
+visible = false
+position = Vector2(0, -30)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="player/attack"]
+position = Vector2(-51, 1)
+shape = SubResource("CapsuleShape2D_dvld6")
+disabled = true
+one_way_collision_margin = 0.0
+debug_color = Color(0.784314, 0.372549, 0.580392, 0.419608)
+
+[node name="Attack" type="Sprite2D" parent="player/attack"]
+position = Vector2(-73, -1.52588e-05)
+scale = Vector2(10, 10)
+texture = ExtResource("11_x5hvy")
+
+[node name="nothin" type="Area2D" parent="player"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="player/nothin"]
+visible = false
+z_index = 1
+position = Vector2(0, 12)
+shape = SubResource("RectangleShape2D_v330y")
+
+[node name="attack_timer" type="Timer" parent="player"]
+wait_time = 0.1
+one_shot = true
+
+[node name="load_timer" type="Timer" parent="player"]
+wait_time = 0.005
+autostart = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="IngameUI" type="ReferenceRect" parent="CanvasLayer"]
+texture_filter = 1
+texture_repeat = 1
+offset_top = -2.0
+offset_right = 1152.0
+offset_bottom = 649.0
+mouse_filter = 2
+
+[node name="hotbar2" type="GridContainer" parent="CanvasLayer/IngameUI"]
+layout_mode = 0
+offset_left = 31.0
+offset_top = 20.0
+offset_right = 141.0
+offset_bottom = 410.0
+mouse_filter = 2
+theme_override_constants/v_separation = 0
+
+[node name="slot1" type="TextureRect" parent="CanvasLayer/IngameUI/hotbar2"]
+custom_minimum_size = Vector2(90, 90)
+layout_mode = 2
+mouse_filter = 0
+texture = ExtResource("7_0mva6")
+expand_mode = 2
+
+[node name="slot2" type="TextureRect" parent="CanvasLayer/IngameUI/hotbar2"]
+custom_minimum_size = Vector2(90, 90)
+layout_mode = 2
+mouse_filter = 0
+texture = ExtResource("6_wab48")
+expand_mode = 2
+
+[node name="slot3" type="TextureRect" parent="CanvasLayer/IngameUI/hotbar2"]
+custom_minimum_size = Vector2(90, 90)
+layout_mode = 2
+mouse_filter = 0
+texture = ExtResource("6_wab48")
+expand_mode = 2
+
+[node name="slot4" type="TextureRect" parent="CanvasLayer/IngameUI/hotbar2"]
+custom_minimum_size = Vector2(90, 90)
+layout_mode = 2
+mouse_filter = 0
+texture = ExtResource("6_wab48")
+expand_mode = 2
+
+[node name="inv" type="GridContainer" parent="CanvasLayer/IngameUI"]
+layout_mode = 0
+offset_left = 135.0
+offset_top = 20.0
+offset_right = 315.0
+offset_bottom = 386.0
+mouse_filter = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 2
+
+[node name="slot1" type="TextureRect" parent="CanvasLayer/IngameUI/inv"]
+custom_minimum_size = Vector2(90, 90)
+layout_mode = 2
+mouse_filter = 0
+texture = ExtResource("7_n4rsq")
+
+[node name="slot2" type="TextureRect" parent="CanvasLayer/IngameUI/inv"]
+custom_minimum_size = Vector2(90, 90)
+layout_mode = 2
+mouse_filter = 0
+texture = ExtResource("7_n4rsq")
+
+[node name="slot3" type="TextureRect" parent="CanvasLayer/IngameUI/inv"]
+custom_minimum_size = Vector2(90, 90)
+layout_mode = 2
+mouse_filter = 0
+texture = ExtResource("7_n4rsq")
+
+[node name="slot4" type="TextureRect" parent="CanvasLayer/IngameUI/inv"]
+custom_minimum_size = Vector2(90, 90)
+layout_mode = 2
+mouse_filter = 0
+texture = ExtResource("7_n4rsq")
+
+[node name="slot5" type="TextureRect" parent="CanvasLayer/IngameUI/inv"]
+custom_minimum_size = Vector2(90, 90)
+layout_mode = 2
+mouse_filter = 0
+texture = ExtResource("7_n4rsq")
+
+[node name="slot6" type="TextureRect" parent="CanvasLayer/IngameUI/inv"]
+custom_minimum_size = Vector2(90, 90)
+layout_mode = 2
+mouse_filter = 0
+texture = ExtResource("7_n4rsq")
+
+[node name="slot7" type="TextureRect" parent="CanvasLayer/IngameUI/inv"]
+custom_minimum_size = Vector2(90, 90)
+layout_mode = 2
+mouse_filter = 0
+texture = ExtResource("7_n4rsq")
+
+[node name="slot8" type="TextureRect" parent="CanvasLayer/IngameUI/inv"]
+custom_minimum_size = Vector2(90, 90)
+layout_mode = 2
+mouse_filter = 0
+texture = ExtResource("7_n4rsq")
+
+[node name="held_item" type="TextureRect" parent="CanvasLayer/IngameUI"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 2.0
+offset_right = 65.0
+offset_bottom = 62.0
+texture = ExtResource("10_hm1yb")
+
+[node name="Label" type="Label" parent="CanvasLayer/IngameUI/held_item"]
+layout_mode = 0
+offset_left = 42.0
+offset_top = 42.0
+offset_right = 71.0
+offset_bottom = 68.0
+text = "64"
+
+[node name="Items" type="Marker2D" parent="."]
+y_sort_enabled = true
+position = Vector2(0, -29)
+
+[node name="Item" parent="Items" instance=ExtResource("7_1urob")]
+position = Vector2(-228, -72)
+
+[node name="Item2" parent="Items" instance=ExtResource("7_1urob")]
+position = Vector2(-543, -149)
+
+[node name="Item3" parent="Items" instance=ExtResource("7_1urob")]
+position = Vector2(-311, -12)
+
+[node name="Item4" parent="Items" instance=ExtResource("7_1urob")]
+position = Vector2(-91, -155)
+
+[node name="Item5" parent="Items" instance=ExtResource("7_1urob")]
+position = Vector2(-112, -55)
+
+[node name="Item6" parent="Items" instance=ExtResource("7_1urob")]
+position = Vector2(-2, -238)
+
+[node name="Item7" parent="Items" instance=ExtResource("7_1urob")]
+position = Vector2(12, -141)
+
+[node name="Item8" parent="Items" instance=ExtResource("7_1urob")]
+position = Vector2(-191, 43)
+
+[node name="Item9" parent="Items" instance=ExtResource("7_1urob")]
+position = Vector2(-325, 76)
+
+[node name="Item10" parent="Items" instance=ExtResource("7_1urob")]
+position = Vector2(-164, -177)
+
+[node name="Item11" parent="Items" instance=ExtResource("7_1urob")]
+position = Vector2(-307, -147)
+
+[node name="Item12" parent="Items" instance=ExtResource("7_1urob")]
+position = Vector2(-423, -81)
+
+[node name="Item13" parent="Items" instance=ExtResource("7_1urob")]
+position = Vector2(-410, -4)
+
+[node name="Item14" parent="Items" instance=ExtResource("7_1urob")]
+position = Vector2(-420, -208)
+
+[node name="Item15" parent="Items" instance=ExtResource("7_1urob")]
+position = Vector2(-271, -246)
+
+[node name="Item16" parent="Items" instance=ExtResource("7_1urob")]
+position = Vector2(-101, -275)
+
+[node name="Item17" parent="Items" instance=ExtResource("7_1urob")]
+position = Vector2(-302, 149)
+
+[connection signal="generate" from="player/Camera2D" to="." method="chunk_generate"]
+[connection signal="input_event" from="player/nothin" to="player" method="_on_nothin_input_event"]
+[connection signal="timeout" from="player/attack_timer" to="player" method="_on_attack_timer_timeout"]
+[connection signal="timeout" from="player/load_timer" to="player/Camera2D" method="_on_load_timer_timeout"]
