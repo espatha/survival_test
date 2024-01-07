@@ -2,14 +2,29 @@ extends Node2D
 var grass = preload("res://ground/grass.png")
 var noise = FastNoiseLite.new()
 var obj_noise = FastNoiseLite.new()
+var time = 720.0
+var SPT = 0.1
 
-"""[1, 255], [0, 1]"""
 var chunks = [#{
 	#"X":0,
 	#"Y":0,
 	#"Ground":[[1, 28], [1, 3], [0, 1], [1, 4], [2, 40]],
 	#"Objects":[{"type":"tree", "x":1, "y":5, "health":100},{"type":"tree", "x":5, "y":10, "health":10}]}
 ]
+
+func _physics_process(_delta):
+	time += SPT
+	
+func get_chunk_local(x, y):
+	var coo = [x, y]
+	for i in range(len(chunks)):
+		if chunks[i]["X"] == coo[0] && chunks[i]["Y"] == coo[1]:
+			return i
+	return -1
+
+func get_chunk(x, y):
+	var coo = $player/Camera2D.chunk_coords(x, y)
+	return get_chunk_local(int(coo[0] / 1280), int(coo[1] / 1280))
 
 func setblock(i, ground, block_type):
 	if i != -1 and ground[i][0] == block_type:
@@ -54,11 +69,11 @@ func chunk_generate(chunk_coo):
 	for y in range(16):
 		var line = []
 		for x in range(16):
-			var new_block = abs(noise.get_noise_2d((chunk_coo[0] * 16 + x), (chunk_coo[1] * 16 + y) * 1)) * 2
+			var new_block = abs(noise.get_noise_2d((chunk_coo[0] * 16 + x), (chunk_coo[1] * 16 + y))) * 2
 			line.append([null, [0]])
-			if new_block > 0.5:
+			if new_block < 0.5:
 				setblock(i, ground, 1)
-			elif new_block > 0.45:
+			elif new_block < 0.55:
 				setblock(i, ground, 2)
 			else:
 				setblock(i, ground, 0)
@@ -66,16 +81,18 @@ func chunk_generate(chunk_coo):
 	for y in range(16):
 		for x in range(16):
 			var new_obj = abs(obj_noise.get_noise_2d((chunk_coo[0] * 16 + x) * 1, (chunk_coo[1] * 16 + y) * 1) * 1)
-			if new_obj < 0.007 && get_block(x, y, ground) == 1 && objects[y][x][0] == null:
-				objects[y][x] = ["tree", [100]]
+			if new_obj < 0.008 && get_block(x, y, ground) == 1 && objects[y][x][0] == null:
+				objects[y][x] = ["tree", [100, {"branches":randi_range(2, 3)}]]
 			elif new_obj > 0.76 && get_block(x, y, ground) == 1 && objects[y][x][0] == null:
-				objects[y][x] = ["rock", [100]]
-			elif randi_range(0, 100) == 1 && get_block(x, y, ground) == 1 && objects[y][x][0] == null:
-				objects[y][x] = ["berry_bush", [20]]
+				objects[y][x] = ["rock", [100, {}]]
+			elif randi_range(0, 1000) == 1 && get_block(x, y, ground) == 1 && objects[y][x][0] == null:
+				objects[y][x] = ["berry_bush", [20, {"berries":randi_range(0, 2)}]]
 	chunks.append({
 		"X":chunk_coo[0],
 		"Y":chunk_coo[1],
 		"Ground":ground,
-		"Objects":objects
+		"Objects":objects,
+		"Mobs":[]
 	})
 	
+"""{"name":"deer", "health":50, "nbt":[], "x":0, "y":0}"""

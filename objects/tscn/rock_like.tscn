@@ -67,6 +67,7 @@ y_sort_enabled = true
 script = ExtResource("1_s21fc")
 metadata/health = 100
 metadata/type = "rock"
+metadata/nbt = {}
 
 [node name="Tree" type="Sprite2D" parent="."]
 position = Vector2(0, -3)

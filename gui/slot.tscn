@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://bmgyvgkhf57rl"]
+
+[ext_resource type="Texture2D" uid="uid://cmcup06o3l3x7" path="res://gui/inv.png" id="1_vox2l"]
+[ext_resource type="Script" path="res://gui/slot.gd" id="2_iqa7d"]
+
+[node name="Slot" type="TextureRect"]
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("1_vox2l")
+script = ExtResource("2_iqa7d")
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]

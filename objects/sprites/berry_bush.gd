@@ -1,11 +1,14 @@
 extends StaticBody2D
 
 var no_berry = preload("res://objects/sprites/bush.png")
+var berry = preload("res://objects/sprites/berry_bush.png")
 @onready var player = $/root/Node2D/player
 
 func _ready():
 	$"/root/Node2D/player/attack".area_entered.connect(_connect)
-	set_meta("nbt", {"Berries":randi_range(1, 3)})
+	await get_tree().process_frame
+	if get_meta("nbt")["berries"] < 1:
+		$Sprite.set_texture(no_berry)
 
 func _connect(area):
 	var body = area.get_owner()
@@ -14,11 +17,11 @@ func _connect(area):
 			var meta = body.get_meta("nbt")
 			body.get_node("AnimationPlayer").play("damage")
 			body.set_meta("health", body.get_meta("health") - player.items[player.inv[player.selected_slot]["Name"]]["damage"])
-			if meta["Berries"] > 0 && player.can_add_item("rock", 1):
-				meta["Berries"] -= 1
+			if meta["berries"] > 0 && player.can_add_item("berries", 1):
+				meta["berries"] -= 1
 				body.set_meta("nbt", meta)
 				body.get_node("Sprite").set_texture(no_berry)
-				player.add_item("rock", 1)
+				player.add_item("berries", 1)
 		else:
 			body.get_node("AnimationPlayer").play("death")
 

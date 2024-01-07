@@ -1,9 +1,10 @@
-[gd_scene load_steps=26 format=3 uid="uid://cf4upd0xdrxmy"]
+[gd_scene load_steps=36 format=3 uid="uid://cf4upd0xdrxmy"]
 
 [ext_resource type="Script" path="res://generation.gd" id="1_6jecg"]
 [ext_resource type="Texture2D" uid="uid://k4xfxej2qnb8" path="res://ground/grass.png" id="2_iuewu"]
 [ext_resource type="Script" path="res://player/player.gd" id="3_hwv4x"]
 [ext_resource type="Texture2D" uid="uid://lvnqdhyhv2vi" path="res://player/player.png" id="4_vrih6"]
+[ext_resource type="Texture2D" uid="uid://dlhpua4mvd3qb" path="res://player/void.png" id="5_e1oif"]
 [ext_resource type="Script" path="res://player/chunk_loading.gd" id="5_lbiql"]
 [ext_resource type="Texture2D" uid="uid://bm0mxhib3x8nn" path="res://gui/hotbar.png" id="6_wab48"]
 [ext_resource type="Texture2D" uid="uid://ckuwbvoqdlls5" path="res://gui/hb_select.png" id="7_0mva6"]
@@ -17,9 +18,55 @@
 [ext_resource type="Texture2D" uid="uid://cktcyo6flgtii" path="res://gui/sat_bar_bottom.png" id="14_uly5n"]
 [ext_resource type="Texture2D" uid="uid://bv5u355615874" path="res://gui/sat_bar_over.png" id="15_nokqy"]
 [ext_resource type="Texture2D" uid="uid://bm6rhgbkuiyh2" path="res://gui/sat_bar_progress.png" id="16_5kut5"]
+[ext_resource type="Texture2D" uid="uid://c05pk83haea2l" path="res://gui/you_died.png" id="17_otos4"]
+[ext_resource type="Texture2D" uid="uid://c2ncs6f8tbi4e" path="res://gui/costyl.png" id="19_hiwf7"]
+[ext_resource type="Texture2D" uid="uid://da78ge102emu1" path="res://objects/sprites/tree.png" id="20_ao1un"]
+[ext_resource type="Texture2D" uid="uid://7q8mkgysgef4" path="res://gui/cursor.png" id="21_nesrk"]
+[ext_resource type="PackedScene" uid="uid://ccebpm8n2g8e0" path="res://mob/deer/deer.tscn" id="23_p1whx"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lk2o3"]
 size = Vector2(50, 48)
+
+[sub_resource type="Animation" id="Animation_rwhae"]
+resource_name = "death"
+length = 4.0
+step = 0.01
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../CanvasLayer/death:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../CanvasLayer/ColorRect:color")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(1, 1.8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0.615686, 0.0235294, 0, 0), Color(0.615686, 0.0235294, 0, 0.301961)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.7, 3.97, 4),
+"transitions": PackedFloat32Array(1.68179, 1, 1, 1),
+"update": 0,
+"values": [0.0, 1.5708, 1.5708, 0.0]
+}
 
 [sub_resource type="Animation" id="Animation_mqq0o"]
 resource_name = "walk_down"
@@ -92,6 +139,7 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_htrj4"]
 _data = {
+"death": SubResource("Animation_rwhae"),
 "walk_down": SubResource("Animation_mqq0o"),
 "walk_left": SubResource("Animation_ig7ep"),
 "walk_right": SubResource("Animation_jhmm5"),
@@ -104,6 +152,29 @@ height = 158.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v330y"]
 size = Vector2(2388, 1346)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6sj2e"]
+
+[sub_resource type="Animation" id="Animation_ai1hq"]
+resource_name = "day_night_cycle"
+length = 24.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 7, 8, 9, 22, 23, 24),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Color(0.415686, 0.439216, 0.639216, 1), Color(0.47451, 0.545098, 0.658824, 1), Color(0.854902, 0.764706, 0.521569, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(0.960784, 0.458824, 0.403922, 1), Color(0.415686, 0.439216, 0.639216, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_q87h3"]
+_data = {
+"day_night_cycle": SubResource("Animation_ai1hq")
+}
 
 [node name="Node2D" type="Node2D"]
 y_sort_enabled = true
@@ -121,6 +192,8 @@ texture = ExtResource("2_iuewu")
 [node name="player" type="CharacterBody2D" parent="."]
 z_index = 5
 y_sort_enabled = true
+motion_mode = 1
+platform_floor_layers = 4294967288
 script = ExtResource("3_hwv4x")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="player"]
@@ -143,6 +216,7 @@ texture_filter = 1
 texture_repeat = 1
 position = Vector2(-1, -44)
 scale = Vector2(10, 10)
+texture = ExtResource("5_e1oif")
 hframes = 5
 vframes = 8
 frame = 10
@@ -150,7 +224,6 @@ frame = 10
 [node name="Camera2D" type="Camera2D" parent="player"]
 texture_filter = 1
 texture_repeat = 1
-position = Vector2(-1, 4.76837e-07)
 scale = Vector2(10, 10)
 zoom = Vector2(0.5, 0.5)
 script = ExtResource("5_lbiql")
@@ -190,6 +263,13 @@ one_shot = true
 
 [node name="load_timer" type="Timer" parent="player"]
 wait_time = 0.005
+autostart = true
+
+[node name="starvation" type="Timer" parent="player"]
+wait_time = 5.0
+autostart = true
+
+[node name="nav_update" type="Timer" parent="player"]
 autostart = true
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
@@ -377,10 +457,9 @@ texture = ExtResource("7_n4rsq")
 visible = false
 layout_mode = 1
 anchors_preset = -1
-offset_left = 5.0
-offset_top = 2.0
-offset_right = 65.0
-offset_bottom = 62.0
+offset_right = 60.0
+offset_bottom = 60.0
+pivot_offset = Vector2(30, 30)
 mouse_filter = 2
 texture = ExtResource("10_hm1yb")
 
@@ -423,6 +502,48 @@ texture_under = ExtResource("14_uly5n")
 texture_over = ExtResource("15_nokqy")
 texture_progress = ExtResource("16_5kut5")
 
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+visible = false
+offset_right = 8145.0
+offset_bottom = 5404.0
+color = Color(0.615686, 0.0235294, 0, 0)
+
+[node name="death" type="TextureRect" parent="CanvasLayer"]
+visible = false
+modulate = Color(1, 1, 1, 0)
+texture_filter = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -198.0
+offset_top = -123.0
+offset_right = 200.0
+offset_bottom = -36.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("17_otos4")
+
+[node name="costyl" type="TextureRect" parent="CanvasLayer"]
+z_index = 1000
+texture_filter = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -114.0
+offset_top = -114.0
+offset_right = 114.0
+offset_bottom = 114.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(100, 100)
+pivot_offset = Vector2(114, 114)
+mouse_filter = 2
+texture = ExtResource("19_hiwf7")
+
 [node name="Items" type="Marker2D" parent="."]
 y_sort_enabled = true
 position = Vector2(0, -29)
@@ -438,6 +559,7 @@ position = Vector2(-91, -155)
 
 [node name="Item5" parent="Items" instance=ExtResource("7_1urob")]
 position = Vector2(-112, -55)
+metadata/item_type = "campfire"
 
 [node name="Item6" parent="Items" instance=ExtResource("7_1urob")]
 position = Vector2(-2, -238)
@@ -447,6 +569,7 @@ position = Vector2(12, -141)
 
 [node name="Item8" parent="Items" instance=ExtResource("7_1urob")]
 position = Vector2(-191, 43)
+metadata/item_type = "campfire"
 
 [node name="Item9" parent="Items" instance=ExtResource("7_1urob")]
 position = Vector2(-325, 76)
@@ -466,7 +589,69 @@ metadata/item_type = "wood"
 position = Vector2(-302, 149)
 metadata/item_type = "stick"
 
+[node name="cursor" type="Sprite2D" parent="."]
+visible = false
+modulate = Color(1, 1, 1, 0.811765)
+z_index = 10
+scale = Vector2(10, 10)
+texture = ExtResource("20_ao1un")
+offset = Vector2(0, -21.485)
+
+[node name="cursor" type="Sprite2D" parent="cursor"]
+modulate = Color(1, 1, 1, 0.423529)
+z_index = -1
+texture = ExtResource("21_nesrk")
+
+[node name="Area2D" type="Area2D" parent="cursor"]
+scale = Vector2(0.1, 0.1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="cursor/Area2D"]
+scale = Vector2(3.545, 3.545)
+shape = SubResource("RectangleShape2D_6sj2e")
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+position = Vector2(2, 7)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasModulate"]
+libraries = {
+"": SubResource("AnimationLibrary_q87h3")
+}
+
+[node name="mobs" type="Marker2D" parent="."]
+z_index = 5
+y_sort_enabled = true
+
+[node name="Deer" parent="mobs" instance=ExtResource("23_p1whx")]
+position = Vector2(-77, 368)
+
+[node name="Deer3" parent="mobs" instance=ExtResource("23_p1whx")]
+position = Vector2(-77, 368)
+
+[node name="Deer4" parent="mobs" instance=ExtResource("23_p1whx")]
+position = Vector2(-77, 368)
+
+[node name="Deer5" parent="mobs" instance=ExtResource("23_p1whx")]
+position = Vector2(-77, 368)
+
+[node name="Deer6" parent="mobs" instance=ExtResource("23_p1whx")]
+position = Vector2(-77, 368)
+
+[node name="Deer7" parent="mobs" instance=ExtResource("23_p1whx")]
+position = Vector2(-77, 368)
+
+[node name="Deer8" parent="mobs" instance=ExtResource("23_p1whx")]
+position = Vector2(-77, 368)
+
+[node name="Deer9" parent="mobs" instance=ExtResource("23_p1whx")]
+position = Vector2(-77, 368)
+
+[node name="Deer2" parent="mobs" instance=ExtResource("23_p1whx")]
+position = Vector2(-38, 181)
+
 [connection signal="generate" from="player/Camera2D" to="." method="chunk_generate"]
+[connection signal="animation_finished" from="player/AnimationPlayer" to="player" method="_on_animation_player_animation_finished"]
 [connection signal="input_event" from="player/nothin" to="player" method="_on_nothin_input_event"]
 [connection signal="timeout" from="player/attack_timer" to="player" method="_on_attack_timer_timeout"]
 [connection signal="timeout" from="player/load_timer" to="player/Camera2D" method="_on_load_timer_timeout"]
+[connection signal="timeout" from="player/starvation" to="player" method="_on_starvation_timeout"]
+[connection signal="timeout" from="player/nav_update" to="player/Camera2D" method="_on_nav_update_timeout"]

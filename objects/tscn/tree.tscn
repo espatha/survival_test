@@ -64,6 +64,7 @@ _data = {
 [node name="Tree" type="StaticBody2D"]
 z_index = 5
 y_sort_enabled = true
+collision_layer = 15
 script = ExtResource("1_dx2y4")
 metadata/health = 100
 metadata/type = "tree"

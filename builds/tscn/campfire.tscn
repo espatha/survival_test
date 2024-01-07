@@ -1,0 +1,224 @@
+[gd_scene load_steps=17 format=3 uid="uid://d2l3xr2q8xetx"]
+
+[ext_resource type="Script" path="res://builds/campfire.gd" id="1_jvjd5"]
+[ext_resource type="Texture2D" uid="uid://xe6hcnia64ip" path="res://builds/sprites/campfire_fire.png" id="2_ba2fw"]
+[ext_resource type="Texture2D" uid="uid://kuf72pbc5bch" path="res://builds/sprites/campfire.png" id="2_wajpw"]
+[ext_resource type="Material" uid="uid://dktudg3ba73h4" path="res://full_bright.tres" id="2_wub52"]
+[ext_resource type="Texture2D" uid="uid://cbpoq8qvvc0py" path="res://gui/container/campfire.png" id="3_rsdcy"]
+[ext_resource type="PackedScene" uid="uid://bmgyvgkhf57rl" path="res://gui/slot.tscn" id="4_eobtw"]
+[ext_resource type="Texture2D" uid="uid://crh6cuurfi4yg" path="res://gui/container/arrow.png" id="5_d4dph"]
+[ext_resource type="Texture2D" uid="uid://bt5lap7vo4uyc" path="res://gui/container/fire.png" id="6_eue66"]
+[ext_resource type="Texture2D" uid="uid://b8wvl0d58wvki" path="res://light.png" id="8_8ap1u"]
+
+[sub_resource type="Animation" id="Animation_gpr51"]
+resource_name = "fire"
+length = 0.9
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 7, 8]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_acfqu"]
+_data = {
+"fire": SubResource("Animation_gpr51")
+}
+
+[sub_resource type="Animation" id="Animation_x5bic"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(),
+"transitions": PackedFloat32Array(),
+"update": 0,
+"values": []
+}
+
+[sub_resource type="Animation" id="Animation_vwbv1"]
+resource_name = "damage"
+length = 0.2455
+step = 0.01
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.06, 0.18, 0.24),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.00438941, 0.0759976, -0.0663406, 0.0]
+}
+
+[sub_resource type="Animation" id="Animation_16cd2"]
+resource_name = "death"
+length = 0.7
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.0001, 0.15, 0.3, 0.4, 0.65),
+"transitions": PackedFloat32Array(1, 2.73208, 1, 1, 1, 0.840896),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(1, 1), Vector2(1, 1.2), Vector2(1.2, 0.1), Vector2(1, 0.3), Vector2(1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_7f2tn"]
+_data = {
+"RESET": SubResource("Animation_x5bic"),
+"damage": SubResource("Animation_vwbv1"),
+"death": SubResource("Animation_16cd2")
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0hyi5"]
+size = Vector2(8, 8)
+
+[node name="Campfire" type="StaticBody2D"]
+z_index = 5
+y_sort_enabled = true
+script = ExtResource("1_jvjd5")
+metadata/health = 10
+metadata/type = "campfire"
+metadata/nbt = {
+"fuel": 0.0,
+"inv": [{
+"Count": 0,
+"Name": "air"
+}, {
+"Count": 0,
+"Name": "air"
+}, {
+"Count": 0,
+"Name": "air"
+}],
+"temperature": 0.0
+}
+metadata/tool = "none"
+metadata/drop = [["wood", 0, 3]]
+
+[node name="fire" type="Sprite2D" parent="."]
+light_mask = 0
+visibility_layer = 2
+z_index = 1
+material = ExtResource("2_wub52")
+position = Vector2(0, -3)
+texture = ExtResource("2_ba2fw")
+hframes = 9
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="fire"]
+libraries = {
+"": SubResource("AnimationLibrary_acfqu")
+}
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_wajpw")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_7f2tn")
+}
+
+[node name="Area2D" type="Area2D" parent="."]
+z_index = 15
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+z_index = 1
+shape = SubResource("RectangleShape2D_0hyi5")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+light_mask = 0
+visibility_layer = 2
+z_index = 5
+texture_filter = 1
+material = ExtResource("2_wub52")
+offset_left = -25.0
+offset_top = -56.0
+offset_right = 25.0
+offset_bottom = -8.0
+mouse_filter = 0
+texture = ExtResource("3_rsdcy")
+
+[node name="Slot" parent="TextureRect" instance=ExtResource("4_eobtw")]
+light_mask = 0
+visibility_layer = 2
+material = ExtResource("2_wub52")
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 38.0
+offset_bottom = 38.0
+scale = Vector2(0.5, 0.5)
+
+[node name="Slot2" parent="TextureRect" instance=ExtResource("4_eobtw")]
+light_mask = 0
+visibility_layer = 2
+material = ExtResource("2_wub52")
+layout_mode = 0
+offset_left = 30.0
+offset_top = 2.0
+offset_right = 66.0
+offset_bottom = 38.0
+scale = Vector2(0.5, 0.5)
+
+[node name="Slot3" parent="TextureRect" instance=ExtResource("4_eobtw")]
+light_mask = 0
+visibility_layer = 2
+material = ExtResource("2_wub52")
+layout_mode = 0
+offset_left = 2.0
+offset_top = 28.0
+offset_right = 38.0
+offset_bottom = 64.0
+scale = Vector2(0.5, 0.5)
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="TextureRect"]
+light_mask = 0
+visibility_layer = 2
+material = ExtResource("2_wub52")
+layout_mode = 0
+offset_left = 21.0
+offset_top = 8.0
+offset_right = 29.0
+offset_bottom = 13.0
+max_value = 8.0
+texture_progress = ExtResource("5_d4dph")
+
+[node name="TextureProgressBar2" type="TextureProgressBar" parent="TextureRect"]
+light_mask = 0
+visibility_layer = 2
+material = ExtResource("2_wub52")
+layout_mode = 0
+offset_left = 7.0
+offset_top = 20.0
+offset_right = 15.0
+offset_bottom = 28.0
+max_value = 8.0
+fill_mode = 3
+texture_progress = ExtResource("6_eue66")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+color = Color(1, 0.415686, 0.101961, 1)
+energy = 0.8
+texture = ExtResource("8_8ap1u")
+texture_scale = 0.5
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
+[connection signal="input_event" from="Area2D" to="." method="_on_area_2d_input_event"]

@@ -5,7 +5,6 @@ var branch = preload("res://objects/tscn/falling_stick.tscn")
 
 func _ready():
 	$"/root/Node2D/player/attack".body_entered.connect(_connect)
-	set_meta("nbt", {"branches":randi_range(2, 4)})
 
 func _connect(body):
 	if body == self && body.has_meta("type") && body.get_meta("type") == "tree":
@@ -32,12 +31,12 @@ func _on_animation_player_animation_finished(anim_name):
 	if anim_name == "death":
 		self.queue_free()
 		for i in range(3 + randi_range(0, 4)):
-			player.spawn_item(global_position.x + i*80 + randi_range(-10, 10), global_position.y + randi_range(-10, 10), "wood")
+			player.spawn_item(global_position.x + i*80, global_position.y, "wood")
 		for i in range(2 + randi_range(0, 2)):
 			player.spawn_item(global_position.x + 180 + randi_range(-150, 150), global_position.y + randi_range(-150, 150), "stick")
 	if anim_name == "-death":
 		self.queue_free()
 		for i in range(3 + randi_range(0, 3)):
-			player.spawn_item(global_position.x - i*80 + randi_range(-20, 20), global_position.y + randi_range(-20, 20), "wood")
+			player.spawn_item(global_position.x - i*80, global_position.y, "wood")
 		for i in range(2 + randi_range(0, 2)):
 			player.spawn_item(global_position.x - 180 + randi_range(-150, 150), global_position.y + randi_range(-150, 150), "stick")
