@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://bnqmly7lu8y0w"]
 
-[ext_resource type="Script" path="res://objects/base.gd" id="1_junuh"]
-[ext_resource type="Texture2D" uid="uid://c3emiqrhu0wop" path="res://builds/sprites/log_wall.png" id="2_d2d33"]
+[ext_resource type="Script" path="res://objects/base.gd" id="1_hkwig"]
+[ext_resource type="Texture2D" uid="uid://c3emiqrhu0wop" path="res://builds/sprites/log_wall.png" id="2_rsgcf"]
 
 [sub_resource type="Animation" id="Animation_x5bic"]
 length = 0.001
@@ -66,17 +66,17 @@ size = Vector2(8, 8)
 z_index = 5
 y_sort_enabled = true
 collision_layer = 15
-script = ExtResource("1_junuh")
+script = ExtResource("1_hkwig")
 metadata/health = 100
 metadata/type = "log_wall"
 metadata/nbt = {}
 metadata/tool = "axe"
-metadata/drop = [["wood", 0, 3]]
+metadata/drop = [["wood", 0, 1]]
 
 [node name="Sprite" type="Sprite2D" parent="."]
 position = Vector2(0, 2)
 rotation = 0.00438941
-texture = ExtResource("2_d2d33")
+texture = ExtResource("2_rsgcf")
 offset = Vector2(0, -3.58)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]

@@ -14,7 +14,6 @@ func _ready():
 func _process(delta):
 	if time < drop_time && v != Vector2.ZERO:
 		time += delta
-		print(v)
 		position += v * delta * (0.2/drop_time)
 		$Sprite.position = Vector2(0, -30 * (-(((2 * time) / drop_time) - 1)**2 + 1))
 		if time > drop_time / 2:

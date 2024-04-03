@@ -1,0 +1,201 @@
+[gd_scene load_steps=13 format=3 uid="uid://dso6kyo7o0blj"]
+
+[ext_resource type="Script" path="res://mob/zombu/zombie.gd" id="1_vrubc"]
+[ext_resource type="Texture2D" uid="uid://cmtrd341dlmob" path="res://mob/zombu/zombu.png" id="2_1cqj3"]
+
+[sub_resource type="Animation" id="Animation_dhc2l"]
+resource_name = "damage"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 0, 0, 1), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_177by"]
+resource_name = "death"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4, 0.5, 0.6),
+"transitions": PackedFloat32Array(2.63902, 1, 1, 1),
+"update": 0,
+"values": [0.0, 1.5708, 1.51844, 1.5708]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 0.662745, 0.607843, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_2m70k"]
+resource_name = "run_down"
+length = 0.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4]
+}
+
+[sub_resource type="Animation" id="Animation_3gkl1"]
+resource_name = "run_left"
+length = 0.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [15, 16, 17, 18, 19]
+}
+
+[sub_resource type="Animation" id="Animation_80crb"]
+resource_name = "run_right"
+length = 0.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [5, 6, 7, 8, 9]
+}
+
+[sub_resource type="Animation" id="Animation_t3x1k"]
+resource_name = "run_up"
+length = 0.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [10, 11, 12, 13, 14]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_slcyo"]
+_data = {
+"damage": SubResource("Animation_dhc2l"),
+"death": SubResource("Animation_177by"),
+"run_down": SubResource("Animation_2m70k"),
+"run_left": SubResource("Animation_3gkl1"),
+"run_right": SubResource("Animation_80crb"),
+"run_up": SubResource("Animation_t3x1k")
+}
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_y7cpq"]
+radius = 4.45253
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8sfcv"]
+size = Vector2(43, 47)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_uvkmc"]
+radius = 5.1
+height = 11.2
+
+[node name="Zombie" type="CharacterBody2D"]
+collision_layer = 2
+collision_mask = 2
+motion_mode = 1
+wall_min_slide_angle = 0.0
+script = ExtResource("1_vrubc")
+metadata/health = 50
+metadata/drop = [["bone", 0, 2]]
+metadata/nbt = {}
+metadata/next_pos = []
+
+[node name="Zombie" type="Sprite2D" parent="."]
+position = Vector2(1, 16)
+scale = Vector2(10, 10)
+texture = ExtResource("2_1cqj3")
+offset = Vector2(0.7, -3.8)
+hframes = 5
+vframes = 4
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+root_node = NodePath("../Zombie")
+speed_scale = 0.3
+libraries = {
+"": SubResource("AnimationLibrary_slcyo")
+}
+
+[node name="damage_player" type="AnimationPlayer" parent="."]
+root_node = NodePath("../Zombie")
+libraries = {
+"": SubResource("AnimationLibrary_slcyo")
+}
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(1.5, -6.5)
+scale = Vector2(10, 10)
+shape = SubResource("CircleShape2D_y7cpq")
+debug_color = Color(0, 0.6, 0.701961, 0.0627451)
+
+[node name="Brain" type="Timer" parent="."]
+wait_time = 2.0
+autostart = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(1.5, 0.5)
+shape = SubResource("RectangleShape2D_8sfcv")
+
+[node name="attack" type="Area2D" parent="."]
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="attack"]
+position = Vector2(24, -1)
+scale = Vector2(10, 10)
+shape = SubResource("CapsuleShape2D_uvkmc")
+disabled = true
+debug_color = Color(0, 0.6, 0.701961, 0.0627451)
+
+[node name="attack_speed" type="Timer" parent="."]
+wait_time = 0.5
+autostart = true
+
+[connection signal="animation_finished" from="damage_player" to="." method="_on_animation_player_animation_finished"]
+[connection signal="timeout" from="Brain" to="." method="_on_brain_timeout"]
+[connection signal="body_entered" from="attack" to="." method="_on_attack_body_entered"]
+[connection signal="timeout" from="attack_speed" to="." method="_on_attack_speed_timeout"]

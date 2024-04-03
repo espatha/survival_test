@@ -8,8 +8,12 @@ func _ready():
 func _connect(body):
 	if body == self:
 		if body.get_meta("health") > 0:
+			var damage = player.items[player.inv[player.selected_slot]["Name"]]["damage"]
+			if !(player.items[player.inv[player.selected_slot]["Name"]]["type"] == "tool" && player.items[player.inv[player.selected_slot]["Name"]]["tool"] == body.get_meta("tool")):
+				damage = floor(damage / 10)
 			body.get_node("AnimationPlayer").play("damage")
-			body.set_meta("health", body.get_meta("health") - player.items[player.inv[player.selected_slot]["Name"]]["damage"])
+			body.set_meta("health", body.get_meta("health") - damage)
+			player.damage_tool(1)
 		else:
 			body.get_node("AnimationPlayer").play("death")
 

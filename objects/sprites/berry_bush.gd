@@ -15,8 +15,11 @@ func _connect(area):
 	if body == self && body.has_meta("type") && body.get_meta("type") == "berry_bush":
 		if body.get_meta("health") > 0:
 			var meta = body.get_meta("nbt")
+			var damage = player.items[player.inv[player.selected_slot]["Name"]]["damage"]
+			if !(player.items[player.inv[player.selected_slot]["Name"]]["type"] == "tool" && player.items[player.inv[player.selected_slot]["Name"]]["tool"] == body.get_meta("tool")):
+				damage = floor(damage / 10)
 			body.get_node("AnimationPlayer").play("damage")
-			body.set_meta("health", body.get_meta("health") - player.items[player.inv[player.selected_slot]["Name"]]["damage"])
+			body.set_meta("health", body.get_meta("health") - damage)
 			if meta["berries"] > 0 && player.can_add_item("berries", 1):
 				meta["berries"] -= 1
 				body.set_meta("nbt", meta)

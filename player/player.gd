@@ -1,7 +1,7 @@
 extends CharacterBody2D
 
 var SPEED
-var normal_speed = 50000
+@export var normal_speed = 50000
 var swim_speed = normal_speed / 2
 var inv_size = 12
 var hb_size = 4
@@ -20,28 +20,49 @@ var starve_mult = 1
 @onready var death_msg = $"../CanvasLayer/death"
 @onready var cursor = $"../cursor"
 @onready var camera = $Camera2D
+@onready var held = $"../CanvasLayer/IngameUI/held_item"
+@onready var held_label = $"../CanvasLayer/IngameUI/held_item/Label"
+@onready var mob_obj = $"../mobs"
+@onready var sprite = get_node("Sprite")
 var default_player = preload("res://player/player.png")
 var player_swiming = preload("res://player/player_swim.png")
 var items = {"air":{"texture":preload("res://items/air.png"), "type":"weapon", "cooldown":0.3, "damage":1, "player_texture":preload("res://player/void.png"), "stack":1, "anim":preload("res://player/player_fist.png")},
-"iron_axe":{"texture":preload("res://items/iron_axe.png"), "type":"tool", "tool":"axe", "cooldown":0.4, "damage":10, "player_texture":preload("res://player/iron_axe.png"), "stack":1, "anim":default_player},
-"stone_axe":{"texture":preload("res://items/stone_axe.png"), "type":"tool", "tool":"axe", "cooldown":0.6, "damage":4, "player_texture":preload("res://player/stone_axe.png"), "stack":1, "anim":default_player},
-"wood":{"texture":preload("res://items/wood.png"), "type":"build", "stack":50, "damage":1, "build":preload("res://objects/tscn/log_wall.tscn"), "preview":preload("res://builds/sprites/log_wall.png"), "offset":-2, "fuel":400},
+"iron_axe":{"texture":preload("res://items/iron_axe.png"), "type":"tool", "tool":"axe", "cooldown":0.4, "damage":30, "player_texture":preload("res://player/iron_axe.png"), "stack":1, "anim":default_player},
+"copper_axe":{"texture":preload("res://items/copper_axe.png"), "type":"tool", "tool":"axe", "cooldown":0.6, "damage":17, "player_texture":preload("res://player/copper_axe.png"), "stack":1, "anim":default_player},
+"copper_knife":{"texture":preload("res://items/copper_knife.png"), "type":"tool", "tool":"knife", "cooldown":0.3, "damage":20, "player_texture":preload("res://player/copper_knife.png"), "stack":1, "anim":default_player},
+"copper_pick":{"texture":preload("res://items/copper_pick.png"), "type":"tool", "tool":"pick", "cooldown":0.6, "damage":15, "player_texture":preload("res://player/copper_pick.png"), "stack":1, "anim":default_player},
+"copper_shovel":{"texture":preload("res://items/copper_shovel.png"), "type":"tool", "tool":"shovel", "cooldown":0.5, "damage":15, "player_texture":preload("res://player/copper_shovel.png"), "stack":1, "anim":default_player},
+"stone_axe":{"texture":preload("res://items/stone_axe.png"), "type":"tool", "tool":"axe", "cooldown":0.6, "damage":7, "player_texture":preload("res://player/stone_axe.png"), "stack":1, "anim":default_player},
+"wood":{"texture":preload("res://items/wood.png"), "type":"build", "stack":50, "damage":1, "build":preload("res://builds/tscn/log_wall.tscn"), "preview":preload("res://builds/sprites/log_wall.png"), "offset":-2, "fuel":400},
 "rock":{"texture":preload("res://items/rock.png"), "type":"resource", "stack":25, "damage":1},
+"native_copper":{"texture":preload("res://items/malachite.png"), "type":"resource", "stack":25, "damage":1},
 "stick":{"texture":preload("res://items/stick.png"), "type":"resource", "stack":50, "damage":1, "fuel":100},
 "berries":{"texture":preload("res://items/berries.png"), "type":"food", "sat":1, "stack":50, "damage":1},
 "meat":{"texture":preload("res://items/meat.png"), "type":"food", "sat":2, "stack":20, "damage":1},
-"stake":{"texture":preload("res://items/steak.png"), "type":"food", "sat":10, "stack":20, "damage":1},
+"steak":{"texture":preload("res://items/steak.png"), "type":"food", "sat":10, "stack":20, "damage":1},
 "bone":{"texture":preload("res://items/bone.png"), "type":"resourse", "stack":25, "damage":3},
+"clay_ball":{"texture":preload("res://items/clay_ball.png"), "type":"resourse", "stack":50, "damage":1},
+"copper_bar":{"texture":preload("res://items/copper.png"), "type":"resourse", "stack":10, "damage":1},
 "campfire":{"texture":preload("res://builds/sprites/campfire.png"), "type":"build", "stack":10, "damage":1, "build":preload("res://builds/tscn/campfire.tscn"), "preview":preload("res://builds/sprites/campfire.png"), "offset":0, "fuel":800},
 }
+var mobs = {"deer":{"prefab":preload("res://mob/deer/deer.tscn")},
+"zombie":{"prefab":preload("res://mob/zombu/zombie.tscn")}
+}
 var item = preload("res://scenes/item.tscn")
-@onready var held = $"../CanvasLayer/IngameUI/held_item"
-@onready var held_label = $"../CanvasLayer/IngameUI/held_item/Label"
 var crafts = [
+["copper_knife", 1, [], {"stick":1, "copper_bar":1}],
 ["stone_axe", 1, [], {"stick":1, "rock":1}],
+["copper_shovel", 1, [], {"stick":2, "copper_bar":1}],
+["copper_axe", 1, [], {"stick":1, "copper_bar":2}],
+["copper_pick", 1, [], {"stick":2, "copper_bar":2}],
 ["campfire", 1, [], {"stick":10}]
 ]
-
+var pick_harvest = {
+	4:[1, 3, "native_copper"]
+}
+var shovel_harvest = {
+	5:[1, 1, "clay_ball"]
+}
 var input = Vector2.ZERO
 var is_moving = false
 var is_holdin_an_item = false
@@ -64,8 +85,6 @@ var current_craft = -1
 var health = 20
 var food = 40.0
 
-@onready var sprite = get_node("Sprite")
-
 func _ready():
 	for i in range(inv_size + 6):
 		inv.append({"Name":"air",
@@ -84,21 +103,19 @@ func _ready():
 func get_input():
 	input.x = int(Input.is_key_pressed(KEY_D)) - int(Input.is_key_pressed(KEY_A))
 	input.y = int(Input.is_key_pressed(KEY_S)) - int(Input.is_key_pressed(KEY_W))
-	
-	return input.normalized()
+	input = input.normalized()
 
 func _physics_process(delta):
 	
-	
 	if !dead:
-	#print($"/root/Node2D".getblock(position.x, position.y))
 		
 		is_swimming = world.getblock(position.x, position.y) == 0
 		
 		cd -= delta 
 		if cd < 0:
 			cd = 0
-		input = get_input()
+		
+		get_input()
 
 	# inventory and hotbar
 
@@ -202,6 +219,16 @@ func _physics_process(delta):
 			cursor.hide()
 		move_and_slide()
 		
+	if randi_range(0, 1000) == 1:
+		try_spawn_mob("deer", Vector2(randf_range(-2, 2), randf_range(-2, 2)).normalized() * 1800 + position)
+	if randi_range(0, 100) == 2 && int(world.time) % 1440 < 420 && mob_cap("monster") < 10:
+		try_spawn_mob("zombie", Vector2(randf_range(-2, 2), randf_range(-2, 2)).normalized() * 1800 + position)
+
+func try_spawn_mob(mob, coords):
+	if camera.get_nav_mesh(coords[0], coords[1]) == 0 && world.getblock(coords[0], coords[1]) == 1:
+		var new_mob = mobs[mob]["prefab"].instantiate()
+		mob_obj.add_child(new_mob)
+		new_mob.position = coords
 
 func hold():
 	if held_item[1] < 1:
@@ -305,6 +332,7 @@ func _gui_input(event, slot):
 						hold()
 						inv[id]["Count"] += 1
 						render_slot(id)
+
 		if event.button_index == MOUSE_BUTTON_LEFT && event.pressed:
 			if !is_holdin_an_item:
 				var nam : String
@@ -371,7 +399,7 @@ func _gui_input(event, slot):
 								slot.get_child(0).get_node("Label").text = str(c[1])
 							else:
 								slot.get_child(0).get_node("Label").text = ""
-			craft_search()
+		craft_search()
 
 func craft_search():
 	var tool_count = 0
@@ -397,8 +425,15 @@ func craft_search():
 				no_craft = false
 				if result_slot.get_child(0).get_child_count() == 0:
 					render_result(craft[0], craft[1])
-					current_craft = crafts.find(craft)
-					print("craft: " + craft[0])
+				else:
+					result_slot.get_child(0).get_child(0).set_texture(items[craft[0]]["texture"])
+					var c = craft[1]
+					if c > 1:
+						result_slot.get_child(0).get_child(0).get_node("Label").text = str(c)
+					else:
+						result_slot.get_child(0).get_child(0).get_node("Label").text = ""
+				current_craft = crafts.find(craft)
+				print("craft: " + craft[0])
 	if no_craft:
 		if result_slot.get_child(0).get_child_count() != 0:
 			result_slot.get_child(0).get_child(0).queue_free()
@@ -463,8 +498,11 @@ func spawn_item(x, y, nam):
 	new_item.set_meta("move", Vector2(randf_range(-100, 100), randf_range(-100, 100)))
 	
 	
-func damage(amount, _type):
-	health -= amount
+func damage(amount, _type, dir):
+	if !dead:
+		health -= amount
+		knokback(dir, 10, 100)
+		$damage_anim.play("damage")
 	if health < 1:
 		health_bar.value = health
 		death()
@@ -473,6 +511,13 @@ func damage(amount, _type):
 		await get_tree().process_frame
 		health_bar.value -= get_process_delta_time() * 15 * dif
 	health_bar.value = health
+
+
+func knokback(dir, time, mult):
+	for i in range(2, time):
+		var move = Vector2.RIGHT.rotated(dir) * mult * (1/float(i))
+		position += move
+		await get_tree().process_frame
 
 	
 func heal(amount):
@@ -499,7 +544,7 @@ func eat(amount):
 		food = 40
 
 func death():
-	$CollisionShape2D.disabled = true
+	$CollisionShape2D.set_deferred("disabled", true)
 	health_bar.value = health
 	health = 20
 	death_msg.show()
@@ -538,20 +583,30 @@ func _on_nothin_input_event(_viewport, _event, _shape_idx):
 func _on_attack_timer_timeout():
 	if is_attacking:
 		$attack/CollisionShape2D.disabled = false
-		$attack.show()
+		if items[inv[selected_slot]["Name"]]["type"] == "weapon" or (items[inv[selected_slot]["Name"]]["type"] == "tool" and (items[inv[selected_slot]["Name"]]["tool"] == "knife" or items[inv[selected_slot]["Name"]]["tool"] == "axe")):
+			$attack.show()
 		is_attacking = false
 		$attack_timer.start()
 	else:
+		harvest("pick", pick_harvest)
+		harvest("shovel", shovel_harvest)
 		$attack.hide()
 		$attack/CollisionShape2D.disabled = true
 
-
+func harvest(name, h):
+	if items[inv[selected_slot]["Name"]]["type"] == "tool" && items[inv[selected_slot]["Name"]]["tool"] == name:
+		for x in range(-1, 2):
+			for y in range(-1, 2):
+				var harvest = world.getblock(global_position.x + x * 80, global_position.y + y * 80)
+				if h.has(harvest) && items[inv[selected_slot]["Name"]]["damage"] > randf_range(0, 100 * h[harvest][0]):
+					world.set_block(global_position.x + x * 80, global_position.y + y * 80, h[harvest][1])
+					spawn_item(global_position.x + x * 80, global_position.y + y * 80, h[harvest][2])
 
 func _on_starvation_timeout():
 	if !dead:
 		eat(-1 * starve_mult)
 		if food <= 0:
-			damage(1, "starve")
+			damage(1, "starve", 0)
 			food = 0
 		elif food > 35:
 			heal(1)
@@ -575,3 +630,14 @@ func _on_animation_player_animation_finished(anim_name):
 		dead = false
 		await get_tree().process_frame
 		$CollisionShape2D.disabled = false
+		
+func mob_cap(mob_type):
+	var mob_cap = 0
+	if mob_type == "monster":
+		for mob in mob_obj.get_children():
+			if mob.get_child(0).name == "Zombie":
+				mob_cap += 1
+	return mob_cap
+	
+func damage_tool(damage):
+	pass

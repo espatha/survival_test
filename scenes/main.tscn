@@ -22,10 +22,25 @@
 [ext_resource type="Texture2D" uid="uid://c2ncs6f8tbi4e" path="res://gui/costyl.png" id="19_hiwf7"]
 [ext_resource type="Texture2D" uid="uid://da78ge102emu1" path="res://objects/sprites/tree.png" id="20_ao1un"]
 [ext_resource type="Texture2D" uid="uid://7q8mkgysgef4" path="res://gui/cursor.png" id="21_nesrk"]
-[ext_resource type="PackedScene" uid="uid://ccebpm8n2g8e0" path="res://mob/deer/deer.tscn" id="23_p1whx"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lk2o3"]
 size = Vector2(50, 48)
+
+[sub_resource type="Animation" id="Animation_gi72u"]
+resource_name = "damage"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 0, 0, 1), Color(1, 1, 1, 1)]
+}
 
 [sub_resource type="Animation" id="Animation_rwhae"]
 resource_name = "death"
@@ -139,6 +154,7 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_htrj4"]
 _data = {
+"damage": SubResource("Animation_gi72u"),
 "death": SubResource("Animation_rwhae"),
 "walk_down": SubResource("Animation_mqq0o"),
 "walk_left": SubResource("Animation_ig7ep"),
@@ -147,8 +163,8 @@ _data = {
 }
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dvld6"]
-radius = 63.0
-height = 158.0
+radius = 80.0
+height = 198.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v330y"]
 size = Vector2(2388, 1346)
@@ -233,12 +249,17 @@ libraries = {
 "": SubResource("AnimationLibrary_htrj4")
 }
 
+[node name="damage_anim" type="AnimationPlayer" parent="player"]
+libraries = {
+"": SubResource("AnimationLibrary_htrj4")
+}
+
 [node name="attack" type="Area2D" parent="player"]
 visible = false
 position = Vector2(0, -30)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="player/attack"]
-position = Vector2(-51, 1)
+position = Vector2(-36, 3)
 shape = SubResource("CapsuleShape2D_dvld6")
 disabled = true
 one_way_collision_margin = 0.0
@@ -262,7 +283,7 @@ wait_time = 0.1
 one_shot = true
 
 [node name="load_timer" type="Timer" parent="player"]
-wait_time = 0.005
+wait_time = 0.001
 autostart = true
 
 [node name="starvation" type="Timer" parent="player"]
@@ -526,6 +547,7 @@ grow_vertical = 2
 texture = ExtResource("17_otos4")
 
 [node name="costyl" type="TextureRect" parent="CanvasLayer"]
+visible = false
 z_index = 1000
 texture_filter = 1
 anchors_preset = 8
@@ -533,10 +555,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -114.0
-offset_top = -114.0
-offset_right = 114.0
-offset_bottom = 114.0
+offset_left = -84.0
+offset_top = -104.0
+offset_right = 144.0
+offset_bottom = 124.0
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(100, 100)
@@ -549,44 +571,63 @@ y_sort_enabled = true
 position = Vector2(0, -29)
 
 [node name="Item" parent="Items" instance=ExtResource("7_1urob")]
-position = Vector2(-228, -72)
+position = Vector2(-457, -12)
+metadata/item_type = "stone_axe"
 
 [node name="Item3" parent="Items" instance=ExtResource("7_1urob")]
-position = Vector2(-311, -12)
+position = Vector2(-385, -12)
+metadata/item_type = "copper_axe"
 
 [node name="Item4" parent="Items" instance=ExtResource("7_1urob")]
-position = Vector2(-91, -155)
+position = Vector2(-255, 143)
+metadata/item_type = "steak"
 
 [node name="Item5" parent="Items" instance=ExtResource("7_1urob")]
-position = Vector2(-112, -55)
+position = Vector2(-416, -191)
 metadata/item_type = "campfire"
 
 [node name="Item6" parent="Items" instance=ExtResource("7_1urob")]
-position = Vector2(-2, -238)
+position = Vector2(-179, -12)
+metadata/item_type = "copper_knife"
 
 [node name="Item7" parent="Items" instance=ExtResource("7_1urob")]
-position = Vector2(12, -141)
+position = Vector2(-243, -12)
+metadata/item_type = "copper_shovel"
 
 [node name="Item8" parent="Items" instance=ExtResource("7_1urob")]
-position = Vector2(-191, 43)
+position = Vector2(-473, -189)
 metadata/item_type = "campfire"
 
 [node name="Item9" parent="Items" instance=ExtResource("7_1urob")]
-position = Vector2(-325, 76)
+position = Vector2(-312, -9)
+metadata/item_type = "copper_pick"
 
 [node name="Item10" parent="Items" instance=ExtResource("7_1urob")]
-position = Vector2(-164, -177)
+position = Vector2(-650, -18)
 
 [node name="Item13" parent="Items" instance=ExtResource("7_1urob")]
-position = Vector2(-410, -4)
+position = Vector2(-470, 147)
 metadata/item_type = "wood"
 
 [node name="Item16" parent="Items" instance=ExtResource("7_1urob")]
-position = Vector2(-101, -275)
+position = Vector2(-524, 149)
 metadata/item_type = "wood"
 
+[node name="Item18" parent="Items" instance=ExtResource("7_1urob")]
+position = Vector2(-593, 148)
+metadata/item_type = "copper_bar"
+
+[node name="Item19" parent="Items" instance=ExtResource("7_1urob")]
+position = Vector2(-638, 106)
+metadata/item_type = "copper_bar"
+
+[node name="Item20" parent="Items" instance=ExtResource("7_1urob")]
+position = Vector2(-697, 161)
+rotation = -2.51383
+metadata/item_type = "copper_bar"
+
 [node name="Item17" parent="Items" instance=ExtResource("7_1urob")]
-position = Vector2(-302, 149)
+position = Vector2(-404, 146)
 metadata/item_type = "stick"
 
 [node name="cursor" type="Sprite2D" parent="."]
@@ -611,6 +652,7 @@ shape = SubResource("RectangleShape2D_6sj2e")
 
 [node name="CanvasModulate" type="CanvasModulate" parent="."]
 position = Vector2(2, 7)
+color = Color(0.415686, 0.439216, 0.639216, 1)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasModulate"]
 libraries = {
@@ -621,35 +663,9 @@ libraries = {
 z_index = 5
 y_sort_enabled = true
 
-[node name="Deer" parent="mobs" instance=ExtResource("23_p1whx")]
-position = Vector2(-77, 368)
-
-[node name="Deer3" parent="mobs" instance=ExtResource("23_p1whx")]
-position = Vector2(-77, 368)
-
-[node name="Deer4" parent="mobs" instance=ExtResource("23_p1whx")]
-position = Vector2(-77, 368)
-
-[node name="Deer5" parent="mobs" instance=ExtResource("23_p1whx")]
-position = Vector2(-77, 368)
-
-[node name="Deer6" parent="mobs" instance=ExtResource("23_p1whx")]
-position = Vector2(-77, 368)
-
-[node name="Deer7" parent="mobs" instance=ExtResource("23_p1whx")]
-position = Vector2(-77, 368)
-
-[node name="Deer8" parent="mobs" instance=ExtResource("23_p1whx")]
-position = Vector2(-77, 368)
-
-[node name="Deer9" parent="mobs" instance=ExtResource("23_p1whx")]
-position = Vector2(-77, 368)
-
-[node name="Deer2" parent="mobs" instance=ExtResource("23_p1whx")]
-position = Vector2(-38, 181)
-
 [connection signal="generate" from="player/Camera2D" to="." method="chunk_generate"]
 [connection signal="animation_finished" from="player/AnimationPlayer" to="player" method="_on_animation_player_animation_finished"]
+[connection signal="animation_finished" from="player/damage_anim" to="player" method="_on_animation_player_animation_finished"]
 [connection signal="input_event" from="player/nothin" to="player" method="_on_nothin_input_event"]
 [connection signal="timeout" from="player/attack_timer" to="player" method="_on_attack_timer_timeout"]
 [connection signal="timeout" from="player/load_timer" to="player/Camera2D" method="_on_load_timer_timeout"]

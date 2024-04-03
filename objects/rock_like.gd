@@ -7,6 +7,6 @@ func _ready():
 
 func _connect(area):
 	var body = area.get_owner()
-	if body == self && body.has_meta("type") && body.get_meta("type") == "rock" && player.can_add_item("rock", 1):
-		player.add_item("rock", 1)
+	if body == self && body.has_meta("type") && player.can_add_item(body.get_meta("type"), 1):
+		player.add_item(body.get_meta("type"), 1)
 		self.queue_free()

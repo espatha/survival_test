@@ -1,12 +1,13 @@
 extends StaticBody2D
 
 @onready var player = $/root/Node2D/player
-var recipes = [["stake", "meat", 0.01, 100],
-["sticks", "berries", 0.3, 400]]
+var recipes = [["steak", "meat", 0.01, 100],
+["copper_bar", "native_copper", 0.03, 400]]
 var progress = 0.0
 @onready var fire = $TextureRect/TextureProgressBar2
 @onready var arrow = $TextureRect/TextureProgressBar
 @onready var light = $PointLight2D
+@onready var smoke = $GPUParticles2D
 
 func _ready():
 	$"/root/Node2D/player/attack".area_entered.connect(_connect)
@@ -33,13 +34,18 @@ func _physics_process(_delta):
 	if nbt["fuel"] > 0 && nbt["temperature"] < 500:
 		nbt["fuel"] -= 1
 		nbt["temperature"] += 0.2
-	elif nbt["temperature"] > 0:
+	elif nbt["temperature"] > 2:
 		nbt["temperature"] -= 0.2
+	elif nbt["temperature"] > 0:
+		nbt["temperature"] -= 0.0005
 	if nbt["temperature"] > 2:
 		$fire.show()
 	else:
 		$fire.hide()
 	var loh = true
+	
+	smoke.emitting = nbt["temperature"] > 0
+	
 	for i in recipes:
 		if i[1] == nbt["inv"][0]["Name"] && (nbt["inv"][1]["Name"] == "air" || nbt["inv"][1]["Name"] == i[0]) && nbt["inv"][1]["Count"] < player.items[nbt["inv"][1]["Name"]]["stack"] && nbt["temperature"] > i[3]:
 			progress += i[2]
@@ -61,8 +67,12 @@ func _connect(area):
 	var body = area.get_owner()
 	if body == self:
 		if body.get_meta("health") > 0:
+			var damage = player.items[player.inv[player.selected_slot]["Name"]]["damage"]
+			if !(player.items[player.inv[player.selected_slot]["Name"]]["type"] == "tool" && player.items[player.inv[player.selected_slot]["Name"]]["tool"] == body.get_meta("tool")):
+				damage = floor(damage / 10)
 			body.get_node("AnimationPlayer").play("damage")
-			body.set_meta("health", body.get_meta("health") - player.items[player.inv[player.selected_slot]["Name"]]["damage"])
+			body.set_meta("health", body.get_meta("health") - damage)
+			player.damage_tool(1)
 		else:
 			body.get_node("Area2D").get_node("CollisionShape2D").queue_free()
 			body.get_node("AnimationPlayer").play("death")

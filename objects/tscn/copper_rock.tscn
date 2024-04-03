@@ -1,7 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://cdpyn14ifji8k"]
+[gd_scene load_steps=8 format=3 uid="uid://0n44tblnogep"]
 
-[ext_resource type="Script" path="res://objects/rock_like.gd" id="1_s21fc"]
-[ext_resource type="Texture2D" uid="uid://dosrrq8201qhr" path="res://items/rock.png" id="2_hsmlu"]
+[ext_resource type="Script" path="res://objects/rock_like.gd" id="1_qu7h5"]
+[ext_resource type="Texture2D" uid="uid://c1ekrys7ommar" path="res://items/malachite.png" id="2_k358c"]
 
 [sub_resource type="Animation" id="Animation_h6d8n"]
 resource_name = "-death"
@@ -64,14 +64,14 @@ radius = 2.0
 [node name="Rock" type="StaticBody2D"]
 z_index = 5
 y_sort_enabled = true
-script = ExtResource("1_s21fc")
+script = ExtResource("1_qu7h5")
 metadata/health = 100
-metadata/type = "rock"
+metadata/type = "native_copper"
 metadata/nbt = {}
 
-[node name="Tree" type="Sprite2D" parent="."]
+[node name="Rock" type="Sprite2D" parent="."]
 position = Vector2(0, -3)
-texture = ExtResource("2_hsmlu")
+texture = ExtResource("2_k358c")
 offset = Vector2(0, 2.685)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
